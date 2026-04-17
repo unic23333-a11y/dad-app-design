@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>准爸爸怀孕助手App - 深度需求调研问卷</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #e0e7ff;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #f0f1ff 0%, #e0e7ff 100%);
+            color: var(--gray-800);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1.5rem 1rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding: 2rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 50px rgba(99, 102, 241, 0.3);
+        }
+
+        header h1 {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(99, 102, 241, 0.2);
+            z-index: 100;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.4s ease;
+        }
+
+        .nav-steps {
+            display: flex;
+            justify-content: center;
+            gap: 0.4rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-step {
+            padding: 0.4rem 0.8rem;
+            border: 2px solid var(--gray-200);
+            background: white;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-step.active {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .nav-step.completed {
+            border-color: var(--success);
+            background: var(--success);
+            color: white;
+        }
+
+        .section {
+            display: none;
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            animation: fadeIn 0.4s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--gray-100);
+        }
+
+        .section-header h2 {
+            font-size: 1.3rem;
+            color: var(--gray-800);
+            margin-bottom: 0.4rem;
+        }
+
+        .section-header p {
+            color: var(--gray-500);
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--gray-700);
+            font-size: 0.95rem;
+        }
+
+        .form-group label .required {
+            color: var(--danger);
+            margin-left: 0.2rem;
+        }
+
+        .form-group label .hint {
+            font-weight: 400;
+            color: var(--gray-400);
+            font-size: 0.8rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        input[type="tel"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 0.75rem;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .radio-group.vertical {
+            gap: 0.6rem;
+        }
+
+        .radio-item,
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            padding: 0.7rem 0.9rem;
+            background: var(--gray-50);
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            font-size: 0.9rem;
+        }
+
+        .radio-item:hover,
+        .checkbox-item:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+
+        .radio-item.selected,
+        .checkbox-item.selected {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+
+        .radio-item input,
+        .checkbox-item input {
+            width: 1.1rem;
+            height: 1.1rem;
+            margin-top: 0.1rem;
+            accent-color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        .radio-item span,
+        .checkbox-item span {
+            flex: 1;
+        }
+
+        .scale-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.3rem;
+            flex-wrap: wrap;
+        }
+
+        .scale-item {
+            flex: 1;
+            min-width: 50px;
+            text-align: center;
+            padding: 0.6rem 0.3rem;
+            background: var(--gray-50);
+            border-radius: 0.6rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .scale-item:hover {
+            background: var(--primary-light);
+        }
+
+        .scale-item.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .scale-item input {
+            display: none;
+        }
+
+        .scale-item .scale-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .scale-item .scale-label {
+            font-size: 0.65rem;
+            margin-top: 0.15rem;
+            opacity: 0.8;
+        }
+
+        /* 功能评分表 */
+        .scale-table {
+            background: var(--gray-50);
+            border-radius: 1rem;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .scale-row {
+            display: grid;
+            grid-template-columns: 2fr repeat(5, 1fr);
+            align-items: center;
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .scale-row:last-child {
+            border-bottom: none;
+        }
+
+        .scale-row.header {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .scale-row.header .scale-score {
+            text-align: center;
+            font-weight: 700;
+            cursor: default;
+        }
+
+        .scale-row:not(.header):hover {
+            background: var(--primary-light);
+        }
+
+        .scale-feature {
+            font-size: 0.85rem;
+            padding-right: 0.5rem;
+        }
+
+        .scale-feature strong {
+            font-size: 0.9rem;
+        }
+
+        .scale-score {
+            text-align: center;
+        }
+
+        .scale-score input[type="radio"] {
+            width: 1.3rem;
+            height: 1.3rem;
+            accent-color: var(--primary);
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .scale-row.header .scale-score input[type="radio"] {
+            display: none;
+        }
+
+        .category-card {
+            background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
+            border: 2px solid var(--gray-100);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .category-card h4 {
+            font-size: 0.95rem;
+            color: var(--primary);
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .category-card h4 .count {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            font-weight: 400;
+        }
+
+        .topic-grid {
+            display: grid;
+            gap: 0.4rem;
+        }
+
+        .topic-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.6rem 0.75rem;
+            background: white;
+            border-radius: 0.5rem;
+            border: 1px solid var(--gray-200);
+            font-size: 0.85rem;
+        }
+
+        .topic-item input {
+            width: 1.1rem;
+            height: 1.1rem;
+            accent-color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        .topic-item label {
+            flex: 1;
+            margin: 0;
+            font-weight: 400;
+            cursor: pointer;
+            line-height: 1.4;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .highlight-box p {
+            color: var(--primary-dark);
+            font-size: 0.9rem;
+        }
+
+        .highlight-box strong {
+            color: var(--primary-dark);
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--gray-200);
+            margin: 1.5rem 0;
+        }
+
+        .sub-section {
+            background: var(--gray-50);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .sub-section h5 {
+            font-size: 0.9rem;
+            color: var(--gray-700);
+            margin-bottom: 0.75rem;
+        }
+
+        .pain-card {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border-left: 4px solid var(--danger);
+            padding: 1rem;
+            border-radius: 0 0.75rem 0.75rem 0;
+            margin-bottom: 1rem;
+        }
+
+        .pain-card h5 {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border-left: 4px solid var(--success);
+            padding: 1rem;
+            border-radius: 0 0.75rem 0.75rem 0;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h5 {
+            color: var(--success);
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-600);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .thank-you {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        .thank-you-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .thank-you h2 {
+            color: var(--gray-800);
+            margin-bottom: 0.75rem;
+        }
+
+        .thank-you p {
+            color: var(--gray-500);
+            max-width: 400px;
+            margin: 0 auto;
+            font-size: 0.9rem;
+        }
+
+        .emoji-icon {
+            font-size: 1.3rem;
+        }
+
+        .mb-1 { margin-bottom: 0.4rem; }
+        .mb-2 { margin-bottom: 0.75rem; }
+        .mb-3 { margin-bottom: 1rem; }
+        .mt-2 { margin-top: 0.75rem; }
+        .mt-3 { margin-top: 1rem; }
+
+        .text-muted {
+            color: var(--gray-500);
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 0.75rem;
+            }
+
+            header h1 {
+                font-size: 1.3rem;
+            }
+
+            .nav-step {
+                padding: 0.35rem 0.6rem;
+                font-size: 0.7rem;
+            }
+
+            .scale-group {
+                gap: 0.2rem;
+            }
+
+            .scale-item {
+                min-width: 40px;
+                padding: 0.5rem 0.2rem;
+            }
+
+            .scale-item .scale-value {
+                font-size: 0.95rem;
+            }
+
+            .scale-item .scale-label {
+                font-size: 0.55rem;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar">
+        <div class="progress-bar-fill" id="progressBar"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>👨‍👩‍👧‍👦 准爸爸怀孕助手App - 深度需求调研</h1>
+            <p>您的真实想法将帮助我们打造更贴心的产品</p>
+        </header>
+
+        <nav class="nav-steps">
+            <button class="nav-step active" data-section="intro">介绍</button>
+            <button class="nav-step" data-section="profile">画像</button>
+            <button class="nav-step" data-section="pain">痛点</button>
+            <button class="nav-step" data-section="features">功能</button>
+            <button class="nav-step" data-section="knowledge">知识</button>
+            <button class="nav-step" data-section="design">设计</button>
+            <button class="nav-step" data-section="open">开放</button>
+            <button class="nav-step" data-section="thanks">完成</button>
+        </nav>
+
+        <!-- 介绍页 -->
+        <section id="intro" class="section active">
+            <div class="section-header">
+                <h2>🎯 关于这次调研</h2>
+            </div>
+
+            <div class="highlight-box mb-3">
+                <p>您好！我们正在开发一款专门为准爸爸设计的怀孕助手App。在正式设计之前，我们希望深入了解您作为准爸爸的真实想法、困惑和期待。</p>
+            </div>
+
+            <div class="highlight-box mb-3" style="background: #fef3c7; border-left: 4px solid #f59e0b;">
+                <p><strong>尊敬的参与者，您好！</strong></p>
+                <p>我们诚挚地邀请您参与一项关于专门为准爸爸设计的怀孕助手App测试调研。本问卷旨在深入了解某人在相关情境中的真实想法与经历，我们在此郑重承诺所有数据仅用于学术研究，并将被严格保密。</p>
+                <p style="margin-top: 0.5rem;"><strong>为确保研究数据的真实性与有效性，本研究仅面向准爸爸群体。</strong>问卷开头设有甄别题项，请您根据实际情况如实填写。若您不符合此基本要求，系统将自动结束问卷，感谢您的理解与支持。</p>
+                <p style="margin-top: 0.5rem;">我们保证您的所有信息将得到严格保密。在填写过程中，如有任何让您感觉不适的地方，您可以选择退出作答。</p>
+            </div>
+
+            <div class="highlight-box mb-3">
+                <p><strong>完成全部有效问卷预计需要10-15分钟。</strong></p>
+                <p>您的每一份回答都对本研究至关重要，衷心感谢您的参与和时间！</p>
+            </div>
+
+            <div class="form-group mb-2">
+                <h3 class="mb-2">问卷会涵盖：</h3>
+                <div class="topic-grid">
+                    <div class="topic-item"><label>📋 <strong>基本信息</strong> - 了解您的背景</label></div>
+                    <div class="topic-item"><label>😣 <strong>痛点场景</strong> - 您最头疼的时刻</label></div>
+                    <div class="topic-item"><label>⚡ <strong>功能期望</strong> - 您希望App能做什么</label></div>
+                    <div class="topic-item"><label>🧠 <strong>知识需求</strong> - 您真正想知道的</label></div>
+                    <div class="topic-item"><label>🎨 <strong>设计偏好</strong> - 您喜欢什么样的体验</label></div>
+                    <div class="topic-item"><label>💭 <strong>心里话</strong> - 您的困惑和期待</label></div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="nextSection('profile')">开始填写 →</button>
+            </div>
+        </section>
+
+        <!-- 用户画像 -->
+        <section id="profile" class="section">
+            <div class="section-header">
+                <h2>👤 用户画像</h2>
+                <p>帮助我们了解您是谁、您的背景和习惯</p>
+            </div>
+
+            <div class="form-group">
+                <label>您的年龄段 <span class="required">*</span></label>
+                <div class="scale-group">
+                    <label class="scale-item" data-value="<25"><input type="radio" name="age" value="<25"><div class="scale-value">&lt;25</div></label>
+                    <label class="scale-item" data-value="25-30"><input type="radio" name="age" value="25-30"><div class="scale-value">25-30</div></label>
+                    <label class="scale-item" data-value="31-35"><input type="radio" name="age" value="31-35"><div class="scale-value">31-35</div></label>
+                    <label class="scale-item" data-value="36-40"><input type="radio" name="age" value="36-40"><div class="scale-value">36-40</div></label>
+                    <label class="scale-item" data-value=">40"><input type="radio" name="age" value=">40"><div class="scale-value">&gt;40</div></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>您的职业领域 <span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="job_field" value="tech"><span>互联网/科技</span></label>
+                    <label class="radio-item"><input type="radio" name="job_field" value="finance"><span>金融/银行/投资</span></label>
+                    <label class="radio-item"><input type="radio" name="job_field" value="medical"><span>医疗/健康</span></label>
+                    <label class="radio-item"><input type="radio" name="job_field" value="education"><span>教育/培训</span></label>
+                    <label class="radio-item"><input type="radio" name="job_field" value="trade"><span>贸易/物流/采购</span></label>
+                    <label class="radio-item"><input type="radio" name="job_field" value="media"><span>媒体/广告/公关</span></label>
+                    <label class="radio-item"><input type="radio" name="job_field" value="government"><span>政府/事业单位</span></label>
+                    <label class="radio-item"><input type="radio" name="job_field" value="service"><span>服务/餐饮/旅游</span></label>
+                    <label class="radio-item"><input type="radio" name="job_field" value="manufacture"><span>制造业/建筑</span></label>
+                    <label class="radio-item"><input type="radio" name="job_field" value="other"><span>其他</span></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>您目前处于哪个阶段 <span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="stage" value="planning"><span>备孕期 - 我们正在尝试怀孕</span></label>
+                    <label class="radio-item"><input type="radio" name="stage" value="early"><span>孕早期（1-12周）- 刚发现怀孕</span></label>
+                    <label class="radio-item"><input type="radio" name="stage" value="mid"><span>孕中期（13-27周）- 稳定期</span></label>
+                    <label class="radio-item"><input type="radio" name="stage" value="late"><span>孕晚期（28周以上）- 倒计时</span></label>
+                    <label class="radio-item"><input type="radio" name="stage" value="experienced"><span>过来人 - 已经历过孕期</span></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>这是您第一次备孕/怀孕经历吗 <span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="first_time" value="yes"><span>是的，第一次</span></label>
+                    <label class="radio-item"><input type="radio" name="first_time" value="no"><span>不是，之前有过经历</span></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>您平时使用智能手机的熟练程度 <span class="required">*</span></label>
+                <div class="scale-group">
+                    <label class="scale-item" data-value="1"><input type="radio" name="tech_level" value="1"><div class="scale-value">1</div><div class="scale-label">不太会用</div></label>
+                    <label class="scale-item" data-value="2"><input type="radio" name="tech_level" value="2"><div class="scale-value">2</div><div class="scale-label"></div></label>
+                    <label class="scale-item" data-value="3"><input type="radio" name="tech_level" value="3"><div class="scale-value">3</div><div class="scale-label">一般</div></label>
+                    <label class="scale-item" data-value="4"><input type="radio" name="tech_level" value="4"><div class="scale-value">4</div><div class="scale-label"></div></label>
+                    <label class="scale-item" data-value="5"><input type="radio" name="tech_level" value="5"><div class="scale-value">5</div><div class="scale-label">非常熟练</div></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>您平时获取孕育知识的主要渠道是？（可多选）</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-item"><input type="checkbox" name="info_source" value="wechat"><span>微信公众号/视频号</span></label>
+                    <label class="checkbox-item"><input type="checkbox" name="info_source" value="xiaohongshu"><span>小红书</span></label>
+                    <label class="checkbox-item"><input type="checkbox" name="info_source" value="douyin"><span>抖音/快手</span></label>
+                    <label class="checkbox-item"><input type="checkbox" name="info_source" value="zhihu"><span>知乎</span></label>
+                    <label class="checkbox-item"><input type="checkbox" name="info_source" value="baidu"><span>百度/搜索引擎</span></label>
+                    <label class="checkbox-item"><input type="checkbox" name="info_source" value="ai"><span>AI助手（deepseek/豆包/千问等）</span></label>
+                    <label class="checkbox-item"><input type="checkbox" name="info_source" value="mom_group"><span>妈妈群/孕妈群</span></label>
+                    <label class="checkbox-item"><input type="checkbox" name="info_source" value="doctor"><span>医生/医院</span></label>
+                    <label class="checkbox-item"><input type="checkbox" name="info_source" value="book"><span>书籍</span></label>
+                    <label class="checkbox-item"><input type="checkbox" name="info_source" value="friend"><span>朋友/同事经验</span></label>
+                    <label class="checkbox-item"><input type="checkbox" name="info_source" value="none"><span>很少主动获取</span></label>
+                </div>
+            </div>
+
+            <div class="form-group mb-0">
+                <label>您使用过哪些孕期/育儿类App？（可多选）</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-item"><input type="checkbox" name="used_app" value="none"><span>没使用过任何孕期App</span></label>
+                    <label class="checkbox-item"><input type="checkbox" name="used_app" value="babytree"><span>宝宝树</span></label>
+                    <label class="checkbox-item"><input type="checkbox" name="used_app" value="mama"><span>妈妈网</span></label>
+                    <label class="checkbox-item"><input type="checkbox" name="used_app" value=" Parenthood"><span>亲宝宝</span></label>
+                    <label class="checkbox-item"><input type="checkbox" name="used_app" value="mingli"><span>美柚</span></label>
+                    <label class="checkbox-item"><input type="checkbox" name="used_app" value="due"><span>孕期伴侣</span></label>
+                    <label class="checkbox-item"><input type="checkbox" name="used_app" value="other"><span>其他</span></label>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="nextSection('intro')">← 上一步</button>
+                <button class="btn btn-primary" onclick="nextSection('pain')">下一步：痛点场景 →</button>
+            </div>
+        </section>
+
+        <!-- 知识需求 -->
+        <section id="knowledge" class="section">
+            <div class="section-header">
+                <h2>🧠 知识需求</h2>
+                <p>您希望App能帮您解答哪些方面的知识困惑？</p>
+            </div>
+
+            <div class="highlight-box mb-2">
+                <p>以下是我们整理的<strong>10个知识维度</strong>。请选择<strong>您最希望了解的3-5个维度</strong>（可多选）。每个维度下有一个示例问题帮助您理解。</p>
+            </div>
+
+            <div class="form-group">
+                <label>哪些知识维度对您最有价值？（可多选）</label>
+                <div class="two-column">
+                    <div class="pain-card">
+                        <h5>1️⃣ 医疗路径</h5>
+                        <p class="text-muted" style="font-size:0.85rem; margin-bottom:0.5rem;">例：备孕/孕期该做哪些检查？报告单上的指标是什么意思？</p>
+                        <div class="topic-grid">
+                            <div class="topic-item"><input type="checkbox" name="knowledge" value="medical_path"><label>我需要了解这个维度</label></div>
+                        </div>
+                    </div>
+
+                    <div class="pain-card">
+                        <h5>2️⃣ 生物演变</h5>
+                        <p class="text-muted" style="font-size:0.85rem; margin-bottom:0.5rem;">例：宝宝现在大概多大？发育到什么阶段了？</p>
+                        <div class="topic-grid">
+                            <div class="topic-item"><input type="checkbox" name="knowledge" value="bio_evolution"><label>我需要了解这个维度</label></div>
+                        </div>
+                    </div>
+
+                    <div class="pain-card">
+                        <h5>3️⃣ 生活干预</h5>
+                        <p class="text-muted" style="font-size:0.85rem; margin-bottom:0.5rem;">例：妻子能吃什么、不能吃什么？能不能运动？</p>
+                        <div class="topic-grid">
+                            <div class="topic-item"><input type="checkbox" name="knowledge" value="life_intervention"><label>我需要了解这个维度</label></div>
+                        </div>
+                    </div>
+
+                    <div class="pain-card">
+                        <h5>4️⃣ 风险控制</h5>
+                        <p class="text-muted" style="font-size:0.85rem; margin-bottom:0.5rem;">例：哪些症状需要警惕？什么时候该去医院？</p>
+                        <div class="topic-grid">
+                            <div class="topic-item"><input type="checkbox" name="knowledge" value="risk_control"><label>我需要了解这个维度</label></div>
+                        </div>
+                    </div>
+
+                    <div class="pain-card">
+                        <h5>5️⃣ 心理与身份</h5>
+                        <p class="text-muted" style="font-size:0.85rem; margin-bottom:0.5rem;">例：如何应对自己的焦虑？如何适应"父亲"这个新角色？</p>
+                        <div class="topic-grid">
+                            <div class="topic-item"><input type="checkbox" name="knowledge" value="psychology"><label>我需要了解这个维度</label></div>
+                        </div>
+                    </div>
+
+                    <div class="pain-card">
+                        <h5>6️⃣ 关系动力学</h5>
+                        <p class="text-muted" style="font-size:0.85rem; margin-bottom:0.5rem;">例：孕期怎么和妻子沟通？怎么处理和长辈的冲突？</p>
+                        <div class="topic-grid">
+                            <div class="topic-item"><input type="checkbox" name="knowledge" value="relationship"><label>我需要了解这个维度</label></div>
+                        </div>
+                    </div>
+
+                    <div class="pain-card">
+                        <h5>7️⃣ 财务与法务</h5>
+                        <p class="text-muted" style="font-size:0.85rem; margin-bottom:0.5rem;">例：生孩子要准备多少钱？有哪些福利政策可以享受？</p>
+                        <div class="topic-grid">
+                            <div class="topic-item"><input type="checkbox" name="knowledge" value="finance_legal"><label>我需要了解这个维度</label></div>
+                        </div>
+                    </div>
+
+                    <div class="pain-card">
+                        <h5>8️⃣ 环境与隐私</h5>
+                        <p class="text-muted" style="font-size:0.85rem; margin-bottom:0.5rem;">例：家里需要做什么调整？孕期用药有什么禁忌？</p>
+                        <div class="topic-grid">
+                            <div class="topic-item"><input type="checkbox" name="knowledge" value="environment"><label>我需要了解这个维度</label></div>
+                        </div>
+                    </div>
+
+                    <div class="pain-card">
+                        <h5>9️⃣ 育儿预演</h5>
+                        <p class="text-muted" style="font-size:0.85rem; margin-bottom:0.5rem;">例：临产前要准备什么？宝宝出生后第一周怎么照顾？</p>
+                        <div class="topic-grid">
+                            <div class="topic-item"><input type="checkbox" name="knowledge" value="parenting_preview"><label>我需要了解这个维度</label></div>
+                        </div>
+                    </div>
+
+                    <div class="pain-card">
+                        <h5>🔟 交互互动</h5>
+                        <p class="text-muted" style="font-size:0.85rem; margin-bottom:0.5rem;">例：怎么和宝宝建立联系？能不能参与胎教？</p>
+                        <div class="topic-grid">
+                            <div class="topic-item"><input type="checkbox" name="knowledge" value="interaction"><label>我需要了解这个维度</label></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="nextSection('features')">← 上一步</button>
+                <button class="btn btn-primary" onclick="nextSection('design')">下一步：设计偏好 →</button>
+            </div>
+        </section>
+
+        <!-- 痛点场景 -->
+        <section id="pain" class="section">
+            <div class="section-header">
+                <h2>😣 痛点场景</h2>
+                <p>以下问题中，请选择<strong>最让您感同身受</strong>的一个选项。</p>
+            </div>
+
+            <div class="form-group">
+                <label><strong>题目1</strong>：妻子刚测出怀孕，您最担心的是？</label>
+                <div class="radio-group vertical">
+                    <label class="radio-item"><input type="radio" name="pain_q1" value="A"><span><strong>A.</strong> 不知道什么时候该去医院确认、要做什么检查</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q1" value="B"><span><strong>B.</strong> 不知道流产/胚亡的可能性大不大，很担心</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q1" value="C"><span><strong>C.</strong> 还没准备好，不知道能不能成为一个好父亲</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q1" value="D"><span><strong>D.</strong> 不知道该给妻子补充什么营养、改变什么生活习惯</span></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><strong>题目2</strong>：您陪妻子去做产检时，最感到无力的是？</label>
+                <div class="radio-group vertical">
+                    <label class="radio-item"><input type="radio" name="pain_q2" value="A"><span><strong>A.</strong> 被问"宝宝现在多大了"却答不上来</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q2" value="B"><span><strong>B.</strong> 感觉自己只是个陪同、司机、付款工具</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q2" value="C"><span><strong>C.</strong> 不知道该怎么帮妻子选择医院/医生</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q2" value="D"><span><strong>D.</strong> 想问医生问题但不知道该问什么</span></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><strong>题目3</strong>：在以下关于妻子身体变化的情况中，您最困惑的是？</label>
+                <div class="radio-group vertical">
+                    <label class="radio-item"><input type="radio" name="pain_q3" value="A"><span><strong>A.</strong> 妻子口味突然变了，不知道做什么给她吃</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q3" value="B"><span><strong>B.</strong> 妻子突然出血/腹痛，不知道该不该去医院</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q3" value="C"><span><strong>C.</strong> 妻子情绪波动大，不知道该怎么沟通</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q3" value="D"><span><strong>D.</strong> 不知道哪些检查指标异常需要担心</span></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><strong>题目4</strong>：您和长辈在育儿问题上意见不一致时，最头疼的是？</label>
+                <div class="radio-group vertical">
+                    <label class="radio-item"><input type="radio" name="pain_q4" value="A"><span><strong>A.</strong> 不知道该怎么和长辈沟通、协调</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q4" value="B"><span><strong>B.</strong> 不知道该不该让父母来帮忙</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q4" value="C"><span><strong>C.</strong> 不知道该怎么平衡传统观念和科学育儿</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q4" value="D"><span><strong>D.</strong> 不知道有哪些生育福利政策可以享受</span></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><strong>题目5</strong>：关于即将到来的临产，您最担心的是？</label>
+                <div class="radio-group vertical">
+                    <label class="radio-item"><input type="radio" name="pain_q5" value="A"><span><strong>A.</strong> 不知道临产有什么征兆、什么时候该去医院</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q5" value="B"><span><strong>B.</strong> 不知道该怎么帮妻子选择分娩方式（顺产/剖腹产）</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q5" value="C"><span><strong>C.</strong> 不知道自己能不能在关键时刻做出正确决定</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q5" value="D"><span><strong>D.</strong> 不知道宝宝出生后第一周怎么照顾</span></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><strong>题目6</strong>：关于新生儿护理，您最没有信心的是？</label>
+                <div class="radio-group vertical">
+                    <label class="radio-item"><input type="radio" name="pain_q6" value="A"><span><strong>A.</strong> 不知道怎么抱宝宝、喂奶、换尿布</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q6" value="B"><span><strong>B.</strong> 不知道该怎么帮妻子产后恢复</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q6" value="C"><span><strong>C.</strong> 担心自己手忙脚乱、帮不上忙</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q6" value="D"><span><strong>D.</strong> 不知道该买什么婴儿用品、哪些是智商税</span></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><strong>题目7</strong>：在以下关于孕期生活的问题中，您最纠结的是？</label>
+                <div class="radio-group vertical">
+                    <label class="radio-item"><input type="radio" name="pain_q7" value="A"><span><strong>A.</strong> 不知道孕期能不能继续性生活</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q7" value="B"><span><strong>B.</strong> 不知道工作中该怎么保护怀孕的妻子</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q7" value="C"><span><strong>C.</strong> 不知道该用什么手段和妻子沟通这个话题</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q7" value="D"><span><strong>D.</strong> 不知道妻子的身体和情绪变化是否正常</span></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><strong>题目8</strong>：关于"准爸爸"这个新身份，您最困惑的是？</label>
+                <div class="radio-group vertical">
+                    <label class="radio-item"><input type="radio" name="pain_q8" value="A"><span><strong>A.</strong> 不知道怎么调整心态来适应这个角色</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q8" value="B"><span><strong>B.</strong> 不知道工作中该怎么平衡家庭</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q8" value="C"><span><strong>C.</strong> 不知道该不该/怎么和老板说怀孕的事</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q8" value="D"><span><strong>D.</strong> 不知道和宝宝建立感情是不是自己的问题</span></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><strong>题目9</strong>：在孕育过程中遇到问题时，您最无助的是？</label>
+                <div class="radio-group vertical">
+                    <label class="radio-item"><input type="radio" name="pain_q9" value="A"><span><strong>A.</strong> 不知道该问谁，身边没有专业人士</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q9" value="B"><span><strong>B.</strong> 找不到其他准爸爸交流，觉得很孤独</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q9" value="C"><span><strong>C.</strong> 上网搜索出来的答案不靠谱</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q9" value="D"><span><strong>D.</strong> 不知道什么东西孕妇绝对不能碰/吃</span></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><strong>题目10</strong>：在以下关于宝宝互动的问题中，您最想做但最不知道怎么做的是？</label>
+                <div class="radio-group vertical">
+                    <label class="radio-item"><input type="radio" name="pain_q10" value="A"><span><strong>A.</strong> 想参与胎教（读故事、唱歌）但不知道怎么做</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q10" value="B"><span><strong>B.</strong> 还没见到宝宝，代入感很弱，不知道怎么建立联系</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q10" value="C"><span><strong>C.</strong> 不知道每天/每周该为妻子做点什么</span></label>
+                    <label class="radio-item"><input type="radio" name="pain_q10" value="D"><span><strong>D.</strong> 不知道家里环境是否安全、需要做什么调整</span></label>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="nextSection('profile')">← 上一步</button>
+                <button class="btn btn-primary" onclick="nextSection('features')">下一步：功能期望 →</button>
+            </div>
+        </section>
+
+        <!-- 功能期望 -->
+        <section id="features" class="section">
+            <div class="section-header">
+                <h2>⚡ 功能期望</h2>
+                <p>您认为以下功能对您的重要程度如何？</p>
+            </div>
+
+            <div class="form-group">
+                <label>请对以下功能的重要性进行评分（1-5分，1分=不需要，5分=非常需要）</label>
+
+                <div class="scale-table">
+                    <div class="scale-row header">
+                        <div class="scale-feature">功能</div>
+                        <div class="scale-score">1</div>
+                        <div class="scale-score">2</div>
+                        <div class="scale-score">3</div>
+                        <div class="scale-score">4</div>
+                        <div class="scale-score">5</div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-feature"><strong>📊 孕周与宝宝发育状态</strong><br><span class="text-muted">查看当前孕周、宝宝发育情况</span></div>
+                        <div class="scale-score"><input type="radio" name="func_week" value="1"></div>
+                        <div class="scale-score"><input type="radio" name="func_week" value="2"></div>
+                        <div class="scale-score"><input type="radio" name="func_week" value="3"></div>
+                        <div class="scale-score"><input type="radio" name="func_week" value="4"></div>
+                        <div class="scale-score"><input type="radio" name="func_week" value="5"></div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-feature"><strong>📋 产检提醒与计划</strong><br><span class="text-muted">下次产检时间、要带什么材料</span></div>
+                        <div class="scale-score"><input type="radio" name="func_checkup" value="1"></div>
+                        <div class="scale-score"><input type="radio" name="func_checkup" value="2"></div>
+                        <div class="scale-score"><input type="radio" name="func_checkup" value="3"></div>
+                        <div class="scale-score"><input type="radio" name="func_checkup" value="4"></div>
+                        <div class="scale-score"><input type="radio" name="func_checkup" value="5"></div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-feature"><strong>🆘 应急处理指南</strong><br><span class="text-muted">紧急情况、突发症状的处理</span></div>
+                        <div class="scale-score"><input type="radio" name="func_emergency" value="1"></div>
+                        <div class="scale-score"><input type="radio" name="func_emergency" value="2"></div>
+                        <div class="scale-score"><input type="radio" name="func_emergency" value="3"></div>
+                        <div class="scale-score"><input type="radio" name="func_emergency" value="4"></div>
+                        <div class="scale-score"><input type="radio" name="func_emergency" value="5"></div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-feature"><strong>🔍 知识搜索</strong><br><span class="text-muted">快速找到孕期问题的答案</span></div>
+                        <div class="scale-score"><input type="radio" name="func_search" value="1"></div>
+                        <div class="scale-score"><input type="radio" name="func_search" value="2"></div>
+                        <div class="scale-score"><input type="radio" name="func_search" value="3"></div>
+                        <div class="scale-score"><input type="radio" name="func_search" value="4"></div>
+                        <div class="scale-score"><input type="radio" name="func_search" value="5"></div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-feature"><strong>👨‍⚕️ 专家问答</strong><br><span class="text-muted">有医生可以咨询问题</span></div>
+                        <div class="scale-score"><input type="radio" name="func_expert" value="1"></div>
+                        <div class="scale-score"><input type="radio" name="func_expert" value="2"></div>
+                        <div class="scale-score"><input type="radio" name="func_expert" value="3"></div>
+                        <div class="scale-score"><input type="radio" name="func_expert" value="4"></div>
+                        <div class="scale-score"><input type="radio" name="func_expert" value="5"></div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-feature"><strong>💰 费用与预算</strong><br><span class="text-muted">生孩子要花多少钱、怎么规划</span></div>
+                        <div class="scale-score"><input type="radio" name="func_finance" value="1"></div>
+                        <div class="scale-score"><input type="radio" name="func_finance" value="2"></div>
+                        <div class="scale-score"><input type="radio" name="func_finance" value="3"></div>
+                        <div class="scale-score"><input type="radio" name="func_finance" value="4"></div>
+                        <div class="scale-score"><input type="radio" name="func_finance" value="5"></div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-feature"><strong>📝 待产包清单</strong><br><span class="text-muted">该准备什么、男女分开的清单</span></div>
+                        <div class="scale-score"><input type="radio" name="func_checklist" value="1"></div>
+                        <div class="scale-score"><input type="radio" name="func_checklist" value="2"></div>
+                        <div class="scale-score"><input type="radio" name="func_checklist" value="3"></div>
+                        <div class="scale-score"><input type="radio" name="func_checklist" value="4"></div>
+                        <div class="scale-score"><input type="radio" name="func_checklist" value="5"></div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-feature"><strong>👥 爸爸社区</strong><br><span class="text-muted">和其他准爸爸交流经验</span></div>
+                        <div class="scale-score"><input type="radio" name="func_community" value="1"></div>
+                        <div class="scale-score"><input type="radio" name="func_community" value="2"></div>
+                        <div class="scale-score"><input type="radio" name="func_community" value="3"></div>
+                        <div class="scale-score"><input type="radio" name="func_community" value="4"></div>
+                        <div class="scale-score"><input type="radio" name="func_community" value="5"></div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-feature"><strong>💑 夫妻空间</strong><br><span class="text-muted">和妻子共享孕期记录</span></div>
+                        <div class="scale-score"><input type="radio" name="func_couple" value="1"></div>
+                        <div class="scale-score"><input type="radio" name="func_couple" value="2"></div>
+                        <div class="scale-score"><input type="radio" name="func_couple" value="3"></div>
+                        <div class="scale-score"><input type="radio" name="func_couple" value="4"></div>
+                        <div class="scale-score"><input type="radio" name="func_couple" value="5"></div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-feature"><strong>🎵 胎教互动</strong><br><span class="text-muted">读故事、唱歌给宝宝听</span></div>
+                        <div class="scale-score"><input type="radio" name="func_prenatal" value="1"></div>
+                        <div class="scale-score"><input type="radio" name="func_prenatal" value="2"></div>
+                        <div class="scale-score"><input type="radio" name="func_prenatal" value="3"></div>
+                        <div class="scale-score"><input type="radio" name="func_prenatal" value="4"></div>
+                        <div class="scale-score"><input type="radio" name="func_prenatal" value="5"></div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-feature"><strong>🧠 心理支持</strong><br><span class="text-muted">压力调适、情绪疏导内容</span></div>
+                        <div class="scale-score"><input type="radio" name="func_psychology" value="1"></div>
+                        <div class="scale-score"><input type="radio" name="func_psychology" value="2"></div>
+                        <div class="scale-score"><input type="radio" name="func_psychology" value="3"></div>
+                        <div class="scale-score"><input type="radio" name="func_psychology" value="4"></div>
+                        <div class="scale-score"><input type="radio" name="func_psychology" value="5"></div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-feature"><strong>📚 产检报告解读</strong><br><span class="text-muted">B超单、各项指标的含义</span></div>
+                        <div class="scale-score"><input type="radio" name="func_report" value="1"></div>
+                        <div class="scale-score"><input type="radio" name="func_report" value="2"></div>
+                        <div class="scale-score"><input type="radio" name="func_report" value="3"></div>
+                        <div class="scale-score"><input type="radio" name="func_report" value="4"></div>
+                        <div class="scale-score"><input type="radio" name="func_report" value="5"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="nextSection('pain')">← 上一步</button>
+                <button class="btn btn-primary" onclick="nextSection('knowledge')">下一步：知识需求 →</button>
+            </div>
+        </section>
+
+        <!-- 设计偏好 -->
+        <section id="design" class="section">
+            <div class="section-header">
+                <h2>🎨 设计偏好</h2>
+                <p>什么样的设计和体验对您更有吸引力？</p>
+            </div>
+
+            <div class="form-group">
+                <label>您喜欢什么样的App视觉风格？</label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="visual_style" value="data"><span>数据仪表盘风格 - 清晰图表、一目了然的信息卡片</span></label>
+                    <label class="radio-item"><input type="radio" name="visual_style" value="warm"><span>温暖柔和风格 - 粉橙色调、圆润设计、可爱插画</span></label>
+                    <label class="radio-item"><input type="radio" name="visual_style" value="minimal"><span>简洁专业风格 - 大量留白、重点突出</span></label>
+                    <label class="radio-item"><input type="radio" name="visual_style" value="modern"><span>科技现代风格 - 深色系、几何图形、赛博朋克感</span></label>
+                    <label class="radio-item"><input type="radio" name="visual_style" value="nature"><span>自然清新风格 - 绿色/蓝色系、植物元素</span></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>您更偏好什么样的内容呈现方式？</label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="content_style" value="visual"><span>可视化为主 - 图片、图表、对比图</span></label>
+                    <label class="radio-item"><input type="radio" name="content_style" value="text"><span>文字为主 - 详细易读的文案</span></label>
+                    <label class="radio-item"><input type="radio" name="content_style" value="checklist"><span>清单化 - 待办清单、步骤指引、勾选完成</span></label>
+                    <label class="radio-item"><input type="radio" name="content_style" value="video"><span>视频化 - 短视频讲解更直观</span></label>
+                    <label class="radio-item"><input type="radio" name="content_style" value="interactive"><span>互动化 - 测试、问答、计算器</span></label>
+                    <label class="radio-item"><input type="radio" name="content_style" value="mixed"><span>混合式 - 根据内容选择最合适的方式</span></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>您希望App的信息密度是？</label>
+                <div class="scale-group">
+                    <label class="scale-item" data-value="compact"><input type="radio" name="density" value="compact"><div class="scale-value">简洁</div><div class="scale-label">少量关键信息</div></label>
+                    <label class="scale-item" data-value="balanced"><input type="radio" name="density" value="balanced"><div class="scale-value">平衡</div><div class="scale-label">适量信息</div></label>
+                    <label class="scale-item" data-value="rich"><input type="radio" name="density" value="rich"><div class="scale-value">丰富</div><div class="scale-label">全面详细</div></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>您希望App推送提醒的频率是？</label>
+                <div class="scale-group">
+                    <label class="scale-item" data-value="none"><input type="radio" name="notification" value="none"><div class="scale-value">无</div><div class="scale-label">不需要</div></label>
+                    <label class="scale-item" data-value="low"><input type="radio" name="notification" value="low"><div class="scale-value">低</div><div class="scale-label">偶尔</div></label>
+                    <label class="scale-item" data-value="medium"><input type="radio" name="notification" value="medium"><div class="scale-value">中</div><div class="scale-label">重要节点</div></label>
+                    <label class="scale-item" data-value="high"><input type="radio" name="notification" value="high"><div class="scale-value">高</div><div class="scale-label">每日</div></label>
+                </div>
+                <p class="text-muted mt-2">例如：产检提醒、本周任务、孕期里程碑等</p>
+            </div>
+
+            <div class="form-group">
+                <label>您更倾向于在什么设备上使用？</label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="device" value="phone"><span>手机 - 随时随地查看</span></label>
+                    <label class="radio-item"><input type="radio" name="device" value="tablet"><span>平板 - 屏幕更大，信息更清晰</span></label>
+                    <label class="radio-item"><input type="radio" name="device" value="watch"><span>智能手表 - 快速查看提醒</span></label>
+                    <label class="radio-item"><input type="radio" name="device" value="both"><span>手机+平板组合使用</span></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>您对"夫妻同步"功能怎么看？</label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="sync_feature" value="must"><span>必须有 - 这是核心功能</span></label>
+                    <label class="radio-item"><input type="radio" name="sync_feature" value="nice"><span>锦上添花 - 有的话更好，没有也行</span></label>
+                    <label class="radio-item"><input type="radio" name="sync_feature" value="not_need"><span>不需要 - 我更想要独立空间</span></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>您能接受什么样的付费模式？</label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="pay_willing" value="free"><span>完全免费</span></label>
+                    <label class="radio-item"><input type="radio" name="pay_willing" value="freemium"><span>免费基础+内购高级功能</span></label>
+                    <label class="radio-item"><input type="radio" name="pay_willing" value="one_time"><span>一次性付费解锁全功能（约30-50元）</span></label>
+                    <label class="radio-item"><input type="radio" name="pay_willing" value="subscription"><span>订阅制（月费8-15元或年费80-150元）</span></label>
+                </div>
+            </div>
+
+            <div class="form-group mb-0">
+                <label>如果App里有社区功能，您希望是什么形式的？</label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="community_type" value="forum"><span>论坛式 - 话题分类、帖子浏览</span></label>
+                    <label class="radio-item"><input type="radio" name="community_type" value="chat"><span>聊天室式 - 实时聊天、群组</span></label>
+                    <label class="radio-item"><input type="radio" name="community_type" value="anonymous"><span>匿名树洞 - 说说心里话，不暴露身份</span></label>
+                    <label class="radio-item"><input type="radio" name="community_type" value="both"><span>组合形式</span></label>
+                    <label class="radio-item"><input type="radio" name="community_type" value="no_need"><span>不需要社区功能</span></label>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="nextSection('knowledge')">← 上一步</button>
+                <button class="btn btn-primary" onclick="nextSection('open')">下一步：开放问题 →</button>
+            </div>
+        </section>
+
+        <!-- 开放问题 -->
+        <section id="open" class="section">
+            <div class="section-header">
+                <h2>💭 心里话</h2>
+                <p>分享您的真实想法、困惑或任何想说的话</p>
+            </div>
+
+            <div class="highlight-box mb-2">
+                <p>这里没有对错，请放心说出您的真实想法。</p>
+            </div>
+
+            <div class="form-group">
+                <label>用一个词或一句话来形容您理想中的"准爸爸怀孕助手"，会是什么？</label>
+                <input type="text" name="ideal_app" placeholder="例如：我的孕期百科、贴心的准爸爸伙伴、孕期必备神器...">
+            </div>
+
+            <div class="form-group">
+                <label>如果这个App有以下"白日梦"功能，您最想要哪个？（可选填）</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-item"><input type="checkbox" name="dream_feature" value="ai_doctor"><span>AI医生7x24小时秒回问题</span></label>
+                    <label class="checkbox-item"><input type="checkbox" name="dream_feature" value="time_travel"><span>能看到宝宝出生的样子</span></label>
+                    <label class="checkbox-item"><input type="checkbox" name="dream_feature" value="translate"><span>自动翻译妻子"话里有话"</span></label>
+                    <label class="checkbox-item"><input type="checkbox" name="dream_feature" value="dad_chat"><span>随时找到愿意听的"过来人"爸爸</span></label>
+                    <label class="checkbox-item"><input type="checkbox" name="dream_feature" value="none"><span>上面的都不需要</span></label>
+                </div>
+            </div>
+
+            <div class="form-group mb-0">
+                <label>还有什么我们没问到，但您想说的吗？（可选填）</label>
+                <textarea name="anything_else" rows="3" placeholder="任何想法、建议、担忧、对未来的期待都可以..."></textarea>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="nextSection('design')">← 上一步</button>
+                <button class="btn btn-success" onclick="submitForm()">提交问卷 ✓</button>
+            </div>
+        </section>
+
+        <!-- 完成页 -->
+        <section id="thanks" class="section">
+            <div class="thank-you">
+                <div class="thank-you-icon">🎉</div>
+                <h2>感谢您的参与！</h2>
+                <p>您的真实反馈将直接帮助我们打造出更适合中国准爸爸的怀孕助手App。</p>
+            </div>
+
+            <div class="highlight-box mt-3">
+                <p><strong>接下来如果您愿意：</strong></p>
+                <ul style="margin-top: 0.5rem; padding-left: 1.2rem; font-size: 0.85rem;">
+                    <li>我们可能会邀请您参与更深度的访谈</li>
+                    <li>产品内测时您可能获得优先体验机会</li>
+                    <li>您的建议可能出现在最终产品中</li>
+                </ul>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="window.location.reload()">再填一次</button>
+                <button class="btn btn-secondary" onclick="exportData()">导出我的回答</button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function nextSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-step').forEach(t => {
+                t.classList.remove('active');
+                if (t.dataset.section === sectionId) t.classList.add('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            updateProgress();
+            window.scrollTo(0, 0);
+        }
+
+        document.querySelectorAll('.nav-step').forEach(tab => {
+            tab.addEventListener('click', () => nextSection(tab.dataset.section));
+        });
+
+        function updateProgress() {
+            const sections = ['intro', 'profile', 'knowledge', 'pain', 'features', 'design', 'open', 'thanks'];
+            const activeIndex = sections.indexOf(document.querySelector('.section.active').id);
+            document.getElementById('progressBar').style.width = (((activeIndex + 1) / sections.length) * 100) + '%';
+        }
+
+        // 评分量表
+        document.querySelectorAll('.scale-group').forEach(group => {
+            group.querySelectorAll('.scale-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const radio = item.querySelector('input[type="radio"]');
+                    if (radio) {
+                        group.querySelectorAll('.scale-item').forEach(i => i.classList.remove('selected'));
+                        item.classList.add('selected');
+                        radio.checked = true;
+                    }
+                });
+            });
+        });
+
+        // 复选框样式
+        document.querySelectorAll('.checkbox-item input').forEach(cb => {
+            cb.addEventListener('change', () => {
+                const item = cb.closest('.checkbox-item');
+                item.classList.toggle('selected', cb.checked);
+            });
+        });
+
+        // 提交
+        function submitForm() {
+            const formData = {};
+            document.querySelectorAll('input, textarea, select').forEach(field => {
+                if (field.name) {
+                    if (field.type === 'checkbox') {
+                        if (!formData[field.name]) formData[field.name] = [];
+                        if (field.checked) formData[field.name].push(field.value);
+                    } else if (field.type === 'radio') {
+                        if (field.checked) formData[field.name] = field.value;
+                    } else {
+                        formData[field.name] = field.value;
+                    }
+                }
+            });
+
+            // 验证必填项
+            const required = ['age', 'job_field', 'stage', 'first_time', 'tech_level'];
+            const missing = required.filter(field => !formData[field]);
+            if (missing.length > 0) {
+                alert('请完成所有必填项后再提交');
+                return;
+            }
+
+            localStorage.setItem('dad_app_survey_v2', JSON.stringify(formData, null, 2));
+
+            document.querySelectorAll('.nav-step').forEach(t => t.classList.add('completed'));
+            document.querySelectorAll('.nav-step').forEach(t => t.classList.remove('active'));
+            document.getElementById('thanks').classList.add('active');
+            document.querySelector('[data-section="thanks"]').classList.add('active');
+            updateProgress();
+            window.scrollTo(0, 0);
+        }
+
+        function exportData() {
+            const saved = localStorage.getItem('dad_app_survey_v2');
+            if (!saved) { alert('没有找到已保存的数据'); return; }
+
+            const data = JSON.parse(saved);
+            let text = '准爸爸怀孕助手App - 深度需求调研问卷\n';
+            text += '='.repeat(50) + '\n';
+            text += `填写时间: ${new Date().toLocaleString('zh-CN')}\n\n`;
+
+            for (const [key, value] of Object.entries(data)) {
+                if (Array.isArray(value)) {
+                    text += `${key}: ${value.join(', ')}\n`;
+                } else if (value) {
+                    text += `${key}: ${value}\n`;
+                }
+            }
+
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = '准爸爸App深度调研_' + new Date().toISOString().split('T')[0] + '.txt';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        updateProgress();
+    </script>
+</body>
+</html>
